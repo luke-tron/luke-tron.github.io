@@ -1,41 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Luke-Tron</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
-    <div class="text-center space-y-4">
-      <h1 class="text-4xl sm:text-5xl font-bold text-teal-400">Hello, I'm Luke-Tron</h1>
-      <p class="text-lg text-gray-300">
-        This is my GitHub Pages site.
-      </p>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>Camera Test</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #111;
+    }
+    video {
+      width: 90%;
+      max-width: 400px;
+      border: 3px solid #00c6ff;
+      border-radius: 8px;
+      background: black;
+    }
+  </style>
+</head>
+<body>
+  <video id="preview" autoplay playsinline></video>
 
-      <div class="space-x-4">
-        <a
-          href="about.html"
-          class="inline-block px-6 py-2 border border-gray-500 rounded hover:bg-gray-100 hover:text-black transition"
-        >
-          About Me
-        </a>
+  <script>
+    async function initCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        const video = document.getElementById('preview');
+        video.srcObject = stream;
+      } catch (err) {
+        alert('无法访问摄像头: ' + err.message);
+        console.error(err);
+      }
+    }
 
-         <a
-          href="resume.html"
-          class="inline-block px-6 py-2 border border-gray-500 rounded hover:bg-gray-100 hover:text-black transition"
-        >
-          resume
-        </a>
-
-        <a
-          href="https://github.com/luke-tron"
-          target="_blank"
-          class="inline-block px-6 py-2 border border-teal-400 rounded hover:bg-teal-400 hover:text-black transition"
-        >
-          Visit My GitHub
-        </a>
-      </div>
-    </div>
-  </body>
+    initCamera();
+  </script>
+</body>
 </html>
