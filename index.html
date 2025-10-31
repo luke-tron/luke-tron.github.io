@@ -2,32 +2,55 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>Camera Test</title>
+  <title>Camera Test - 后置摄像头</title>
   <style>
     body {
       margin: 0;
+      background: #000;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background: #111;
     }
     video {
       width: 90%;
-      max-width: 400px;
-      border: 3px solid #00c6ff;
+      max-width: 480px;
       border-radius: 8px;
-      background: black;
+      border: 2px solid #00c6ff;
+    }
+    button {
+      position: absolute;
+      bottom: 20px;
+      padding: 8px 16px;
+      background: #00c6ff;
+      border: none;
+      border-radius: 6px;
+      color: #000;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <video id="preview" autoplay playsinline></video>
+  <button id="switch">切换镜头</button>
 
   <script>
-    async function initCamera() {
+    let usingBack = true; // 当前是否用后置
+    let currentStream;
+
+    async function startCamera() {
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+      }
+
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        const constraints = {
+          video: { facingMode: usingBack ? { exact: "environment" } : "user" },
+          audio: false
+        };
+
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        currentStream = stream;
         const video = document.getElementById('preview');
         video.srcObject = stream;
       } catch (err) {
@@ -36,7 +59,12 @@
       }
     }
 
-    initCamera();
+    document.getElementById('switch').addEventListener('click', () => {
+      usingBack = !usingBack;
+      startCamera();
+    });
+
+    startCamera();
   </script>
 </body>
 </html>
